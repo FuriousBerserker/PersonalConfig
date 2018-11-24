@@ -2,7 +2,7 @@
 set nu!
 syntax enable
 syntax on
-colorscheme torte
+colorscheme evening
 set autoindent
 set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 set go=
@@ -10,7 +10,7 @@ set hlsearch
 "set guifont=Monospace\ 12
 "set guifont=Courier\ 10\ Pitch\ 12
 set guifont=DejaVu\ Sans\ Mono\ 12
-"set lines=40 columns=80
+set lines=40 columns=80
 set guioptions+=r
 filetype plugin on
 set nocompatible
