@@ -1,6 +1,11 @@
 #!/bin/bash
 #module load cmake/3.6.0 clang/7.0-master cuda/91
 
+if [ $# -lt 3 ]; then
+    echo "download-and-build-clang.sh <SRC FOLDER> <BUILD FOLDER> <INSTALL FOLDER>"
+    exit 1
+fi
+
 SRC=$1
 BUILD=$2
 INSTALL=$3
