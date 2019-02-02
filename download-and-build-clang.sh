@@ -63,7 +63,7 @@ if [ ! -e $BUILD/llvm/clang-full ]; then
 fi
 
 cd $BUILD/llvm/clang-full
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$INSTALL/clang-full -DLIBOMP_OMPT_SUPPORT=on -DLLVM_ENABLE_LIBCXX=ON -DLLVM_LIT_ARGS="-sv -j12" -DCLANG_DEFAULT_CXX_STDLIB=libc++ $SRC/llvm
+CC=clang CXX=clang++ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$INSTALL/clang-full -DLIBOMP_OMPT_SUPPORT=on -DLLVM_ENABLE_LIBCXX=ON -DLLVM_LIT_ARGS="-sv -j12" -DCLANG_DEFAULT_CXX_STDLIB=libc++ $SRC/llvm
             #-DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_70 \
             #-DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=35,60,70 \
 make -j$[$(nproc --all) * 2 / 3] install
