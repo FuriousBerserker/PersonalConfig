@@ -1,6 +1,9 @@
 #!/bin/bash
 #module load cmake/3.6.0 clang/7.0-master cuda/91
 
+set -e
+set -x
+
 if [ $# -lt 3 ]; then
     echo "download-and-build-clang.sh <SRC FOLDER> <BUILD FOLDER> <INSTALL FOLDER>"
     exit 1
@@ -33,10 +36,10 @@ if [ ! -e $SRC/llvm ]; then
   cd $SRC/llvm/projects
   mkdir compiler-rt
   git clone https://github.com/llvm-mirror/compiler-rt.git compiler-rt
-  mkdir libcxxabi
-  git clone https://github.com/llvm-mirror/libcxxabi.git libcxxabi
-  mkdir libcxx
-  git clone https://github.com/llvm-mirror/libcxx.git libcxx
+  #mkdir libcxxabi
+  #git clone https://github.com/llvm-mirror/libcxxabi.git libcxxabi
+  #mkdir libcxx
+  #git clone https://github.com/llvm-mirror/libcxx.git libcxx
 #  cd $SRC/llvm/projects/libunwind
 #  git clone https://github.com/llvm-mirror/libunwind.git
   mkdir openmp
@@ -51,11 +54,14 @@ if [ ! -e $BUILD/llvm/bootstrap ]; then
 fi
 
 cd $BUILD/llvm/bootstrap
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$INSTALL/clang-bootstrap/ -DLLVM_ENABLE_LIBCXX=ON -DCLANG_DEFAULT_CXX_STDLIB=libc++ $SRC/llvm
-make -j$[$(nproc --all) * 2 / 3] install
+CC=$(which gcc) CXX=$(which g++) cmake -DCMAKE_BUILD_TYPE=Release \
+  $SRC/llvm
+  #-DLLVM_ENABLE_LIBCXX=ON -DCLANG_DEFAULT_CXX_STDLIB=libc++ \
+make -j$[$(nproc --all) * 2 / 3] 
+#make
 
-PATH=$BUILD/llvm/bootstrap/bin:$PATH
-LD_LIBRARY_PATH=$BUILD/llvm/bootstrap/lib:$LD_LIBRARY_PATH
+export PATH=$BUILD/llvm/bootstrap/bin:$PATH
+export LD_LIBRARY_PATH=$BUILD/llvm/bootstrap/lib:$LD_LIBRARY_PATH
 
 
 if [ ! -e $BUILD/llvm/clang-full ]; then
@@ -66,4 +72,12 @@ cd $BUILD/llvm/clang-full
 CC=clang CXX=clang++ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$INSTALL/clang-full -DLIBOMP_OMPT_SUPPORT=on -DLLVM_ENABLE_LIBCXX=ON -DLLVM_LIT_ARGS="-sv -j12" -DCLANG_DEFAULT_CXX_STDLIB=libc++ $SRC/llvm
             #-DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_70 \
             #-DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=35,60,70 \
+
+# full options to enable OMPT and TSAN in LLVM
+#CC=$(which clang) CXX=$(which clang++) cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$INSTALL -DLIBOMP_OMPT_SUPPORT=on \
+#            -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_70 \
+#            -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=35,60,70 \
+#            $SRC/llvm
+#-DLLVM_ENABLE_LIBCXX=ON -DLLVM_LIT_ARGS="-sv -j12" -DCLANG_DEFAULT_CXX_STDLIB=libc++ \
 make -j$[$(nproc --all) * 2 / 3] install
+#make install
