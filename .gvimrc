@@ -19,6 +19,9 @@ set nocompatible
 highlight ExtraWhitespace ctermbg=Grey guibg=DarkGrey
 autocmd BufWinEnter * match ExtraWhitespace /^\t\+\|\t\+$/
 
+"fix backspace
+set backspace=indent,eol,start
+
 "encoding
 set encoding=utf-8
 set fileencodings=utf-8,chinese,latin-1

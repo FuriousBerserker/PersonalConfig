@@ -28,6 +28,9 @@ else
     set fileencoding=utf-8
 endif
 
+"fix backspace
+set backspace=indent,eol,start
+
 "vundle
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -65,6 +68,7 @@ let g:ycm_min_num_of_chars_for_completion=1
 let g:ycm_error_symbol='>>'
 let g:ycm_warning_symbol='>*'
 let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
+let g:ycm_server_python_interpreter='python2'
 map <F9> :YcmDiags<CR>
 nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>
 nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
